@@ -1,55 +1,43 @@
 package mainthread;
 
-import entity.Video;
-import entity.VideoInformation;
+import controller.StudentController;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class MainThread {
     public static void main(String[] args) throws IOException {
-        FileReader fileReader = new FileReader("src/main/resources/tom&jery.txt");
-        BufferedReader br = new BufferedReader(fileReader);
-        String line;
-        int count = 0;
-        ArrayList<Video> list = new ArrayList<>();
-        while ((line = br.readLine()) != null) {
-            if (count == 0) {
-                count++;
-                continue;
+        StudentController controller = new StudentController();
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("----------Menu---------");
+            System.out.println("1. Add student.");
+            System.out.println("2. Write file.");
+            System.out.println("3. Read File.");
+            System.out.println("4. Bye.");
+            System.out.println("Enter choice: ");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    controller.addStudent();
+                    break;
+//                case 2:
+//                    controller.writeFile();
+//                    break;
+                case 3:
+                    controller.readFile();
+                    break;
+                case 4:
+                    System.out.println("Bye.");
+                    break;
+                default:
+                    System.out.println("Choose number in {1,4}.");
+                    break;
             }
-            System.out.println(line);
-            String[] splitted = line.split("\\s{2,}");
-            if (splitted.length == 4) {
-                String date = splitted[0];
-                String id = splitted[1];
-                String title = splitted[2];
-                double views = Double.parseDouble(splitted[3]);
-                Video video = new Video(date, id, title, views);
-                list.add(video);
+            if (choice == 4) {
+                break;
             }
-            count++;
-        }
-        HashMap<String, VideoInformation> statistic = new HashMap<>();
-        for (Video information : list) {
-            double currentMoney = 0;
-            if (statistic.containsKey(information.getId())) {
-                VideoInformation videoInformation = statistic.get(information.getId());
-                currentMoney = videoInformation.getViews();
-            }
-            currentMoney = currentMoney + information.getViews();
-            VideoInformation videoPunishment = new VideoInformation(information.getId(), information.getTitle(), currentMoney);
-            statistic.put(information.getId(), videoPunishment);
-        }
-
-        for (String rollNumber :
-                statistic.keySet()) {
-            System.out.println(rollNumber);
-            VideoInformation videoInformation = statistic.get(rollNumber);
-            System.out.println(videoInformation.getViews());
         }
 
     }
 }
-
